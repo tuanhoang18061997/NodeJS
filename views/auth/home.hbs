@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> {{title}}</title>
+  {{> head}}
+
+</head>
+
+<body>
+  <div class="container">
+    {{#if message}}
+    <div class="alert alert-success">{{message}}</div>
+    {{/if}}
+    <div class="card">
+      <div class="card-header">
+        Dashboard <b>
+          {{ fullName}}
+
+        </b>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Welcome</h5>
+        <i class="fab fa-facebook"></i>
+        <p class="card-text">You have successfully login</p>
+        <a href="/auth/logout" class="btn btn-primary">Logout</a>
+      </div>
+    </div>
+
+  </div>
+</body>
+{{> scripts}}
+
+</html>
