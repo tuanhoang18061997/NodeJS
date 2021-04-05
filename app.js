@@ -7,6 +7,8 @@ const cors = require('cors');
 
 const app = express();
 
+const bcrypt = require('bcrypt');
+
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -70,14 +72,15 @@ hbs.registerPartials(__dirname + '/views/pages');
 
 //Truy cập mặc định tới trang index
 app.get('/', (req, res) => {
-  // let sql = `SELECT * FROM users`;
-  // connection.query(sql, (err, users) => {
-  //   if (err) throw err;
-  //   res.render('\index', {
-  //     title: "Danh sách người dùng",
-  //     itemUser: users
-  //   });
-  res.json({ message: "Welcome to bezkoder application." })
+  let sql = `SELECT * FROM users`;
+  connection.query(sql, (err, users) => {
+    if (err) throw err;
+    res.render('\index', {
+      title: "Danh sách người dùng",
+      itemUser: users
+    });
+    // res.json({ message: "Welcome to bezkoder application." })
+  });
 });
 //Truy cập đến trang create
 app.get('/create-form', (req, res) => {
@@ -86,17 +89,29 @@ app.get('/create-form', (req, res) => {
   })
 })
 // post thêm người dùng
-app.post('/create', (req, res) => {
-  let nameInput = req.body.name;
-  let emailInput = req.body.email;
+app.post('/create', async (req, res) => {
+  try {
+    let nameInput = req.body.name;
+    let emailInput = req.body.email;
+    let usernameInput = req.body.user;
+    let passwordInput = req.body.password;
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hashSync(passwordInput, salt);
 
-  let data = { name: nameInput, email: emailInput };
-  let sql = `INSERT INTO users SET ? `;
-  db.query(sql, data, (err) => {
-    if (err) throw err;
-    console.log(`Tạo mới thành công người dùng: ${nameInput}`);
-    res.redirect('/');
-  });
+
+    let data = { name: nameInput, email: emailInput, user: usernameInput, password: hash };
+    let sql = `INSERT INTO users SET ? `;
+    await connection.query(sql, data, (err) => {
+      if (err) throw err;
+      res.status(200).send("Tạo mới thành công");
+      // console.log(`Tạo mới thành  công người dùng: ${nameInput}`);
+      // res.redirect('/');
+      res.end();
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).send("Errror DB");
+  }
 });
 
 // Truy cập đến trang sửa thông tin
