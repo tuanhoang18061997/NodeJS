@@ -27,7 +27,7 @@ html {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  position: fixed;
+  position: relative;
   background: var(--main-bg-color);
   color: var(--main-color);
   top: 0;
