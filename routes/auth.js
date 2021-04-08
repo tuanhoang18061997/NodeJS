@@ -19,7 +19,7 @@ router.post('/authentication', (req, res) => {
   var password = req.body.password;
   if (username && password) {
     connection.query('SELECT *  FROM users WHERE user = ?', [username], async function (error, results, fields) {
-      let validPass = await bcrypt.compareSync(password,results[0].password);
+      let validPass = await bcrypt.compareSync(password,results[0].password );
       if (validPass) {
         res.status(200);
         req.session.loggedin = true;

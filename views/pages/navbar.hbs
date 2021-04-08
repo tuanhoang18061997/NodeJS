@@ -10,8 +10,9 @@ My-Logo" class="nav-item__logo">
       </a>
     </li>
   </ul>
-  <form class="navbar-search">
-    <input type="text" name="searchInput" class="navbar-search__input" placeholder="Search......">
+  <form action="/search" method="POST" class="navbar-search">
+    <input type="text" name="searchName" class="navbar-search__input" placeholder="Search......">
+    {{!-- <button type="submit">Search</button> --}}
     <i class="fas fa-search navbar-search__icon"></i>
   </form>
   <ul class="navbar-nav">

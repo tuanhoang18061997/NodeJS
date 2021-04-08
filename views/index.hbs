@@ -5,36 +5,35 @@
 {{> head}}
 
 <body>
-  {{!-- {{> navbar}} --}}
-  
-<a href="/create-form">Thêm mới</a>
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Mã</th>
-              <th scope="col">Tên</th>
-              <th scope="col">Email</th>
-              <th scope="col">Hành Động</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each itemUser}}
-            <tr>
-              <th scope="row">{{id}}</th>
-              <td>{{ name }}</td>
-              <td>{{ email }}</td>
-              <td>
-                <a href="/edit-form/{{this.id}}" class="btn btn-md btn-primary edit">Sửa</a>
-                <a href="/delete/{{this.id}}" class="btn btn-md btn-danger delete">Xóa</a>
-              </td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
+  {{> navbar}}
+  <div>
+    <a href="/create-form">Thêm mới</a>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Mã</th>
+          <th scope="col">Tên</th>
+          <th scope="col">Email</th>
+          <th scope="col">Tài khoản</th>
+          <th scope="col">Hành Động</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each itemUser}}
+        <tr>
+          <th scope="row">{{id}}</th>
+          <td>{{ name }}</td>
+          <td>{{ email }}</td>
+          <td>{{user}}</td>
+          <td>
+            <a href="/edit-form/{{this.id}}" class="btn btn-md btn-primary edit">Sửa</a>
+            <a href="/delete/{{this.id}}" class="btn btn-md btn-danger delete">Xóa</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
-
 
 </body>
 <!--Load bootstrap.js file-->
