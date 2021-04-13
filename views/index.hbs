@@ -7,8 +7,11 @@
 <body>
   {{> navbar}}
   <div>
-    <a href="/create-form">Thêm mới</a>
-    <table class="table table-hover">
+    <a href="/api/sign-up">Thêm mới</a>
+    {{#if message}}
+    <div class="alert alert-danger">{{message}}</div>
+    {{/if}}
+    <table class="table table-hover table-list-users">
       <thead>
         <tr>
           <th scope="col">Mã</th>
@@ -26,8 +29,8 @@
           <td>{{ email }}</td>
           <td>{{user}}</td>
           <td>
-            <a href="/edit-form/{{this.id}}" class="btn btn-md btn-primary edit">Sửa</a>
-            <a href="/delete/{{this.id}}" class="btn btn-md btn-danger delete">Xóa</a>
+            <a href="/edit-form/{{this.id}}" class="btn btn-lg btn-primary edit">Sửa</a>
+            <a href="/delete/{{this.id}}" class="btn btn-lg btn-danger delete">Xóa</a>
           </td>
         </tr>
         {{/each}}
