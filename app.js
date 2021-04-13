@@ -74,14 +74,21 @@ hbs.registerPartials(__dirname + '/views/partials');
 hbs.registerPartials(__dirname + '/views/pages');
 
 
+// add routes
+const routers = express.Router();
+const router = require('./routes/auth.js');
+const { get } = require('./routes/auth');
+app.use('/api', router);
+
+
 //Truy cập mặc định tới trang index
-app.get('/',async (req, res) => {
+app.get('/', async (req, res) => {
   try {
     let sql = `SELECT * FROM users`;
     await connection.query(sql, (err, users) => {
       if (err) throw err;
 
-      res.render('\index', {
+      res.render('index', {
         title: "Danh sách người dùng",
         itemUser: users
       });
@@ -93,35 +100,22 @@ app.get('/',async (req, res) => {
     res.status(500).send("Lỗi server");
   }
 });
-//Truy cập đến trang create
-app.get('/create-form', (req, res) => {
-  res.render('\create', {
+
+app.get('/api/sign-up', (req, res) => {
+  res.render('users/create', {
     title: "Tạo người dùng mới"
   })
 })
-// post thêm người dùng
-app.post('/create', async (req, res) => {
-  try {
-    let nameInput = req.body.name;
-    let emailInput = req.body.email;
-    let usernameInput = req.body.user;
-    let passwordInput = req.body.password;
-    const salt = await bcrypt.genSalt(10);
-    const hash = bcrypt.hashSync(passwordInput, salt);
+router.post('/api/sign-up');
 
+app.get('/api/sign-in', (req, res) => {
+  res.render('auth/login');
+})
 
-    let data = { name: nameInput, email: emailInput, user: usernameInput, password: hash };
-    let sql = 'INSERT INTO users SET ?;SET  @num := 0;UPDATE users SET id = @num := (@num+1);ALTER TABLE users AUTO_INCREMENT =1 ';
-    connection.query(sql, data, (err) => {
-      if (err) throw err;
-      res.redirect('/')
-      res.end();
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).send("Errror DB");
-  }
-});
+router.get('/api/home')
+router.post('/api/sign-in');
+router.post('/api/search');
+router.get('/api/secret-route');
 
 // Truy cập đến trang sửa thông tin
 app.get('/edit-form/:id', async (req, res) => {
@@ -129,10 +123,7 @@ app.get('/edit-form/:id', async (req, res) => {
   let sql = "SELECT * FROM users WHERE id = ? ";
   await connection.query(sql, [id], (err, row) => {
     if (err) throw err;
-    let stringName = row[0].name;
-    stringName = stringName.replace(/\s+/g, ' ');
-    console.log(stringName)
-    res.render('\edit', {
+    res.render('users/edit', {
       title: 'Sửa thông tin',
       user: row[0]
     })
@@ -150,7 +141,7 @@ app.post('/edit/:id', (req, res) => {
     res.redirect('/');
   });
 });
-app.get('/delete/:id', cors() ,(req, res) => {
+app.get('/delete/:id', cors(), (req, res) => {
   let id = req.params.id;
   let sql = "DELETE FROM users WHERE id= ?;SET  @num := 0;UPDATE users SET id = @num := (@num+1);ALTER TABLE users AUTO_INCREMENT =1";
   connection.query(sql, [id], (err, result) => {
@@ -161,16 +152,7 @@ app.get('/delete/:id', cors() ,(req, res) => {
   });
 });
 
-app.post('/search', function (req, res) {
-  var str = { stringPart: req.body.searchName };
-  let sql = 'SELECT * FROM users WHERE name LIKE "%' + str.stringPart + '%" OR email LIKE "%' + str.stringPart + '%"';
 
-  connection.query(sql, function (err, rows, fields) {
-    if (err) throw err;
-    // res.redirect('/', { itemUser: rows });
-    res.render('\index', { itemUser: rows });
-  })
-})
 
 // set port, listen for requests
 const PORT = process.env.PORT || 4000;
